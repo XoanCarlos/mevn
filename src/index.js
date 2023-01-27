@@ -7,6 +7,7 @@ mongoose.connect('mongodb://127.0.0.1/mevndb')
     .then(db => console.log('Base de datos conectada') )
     .catch(err => console.log(err));
 
+
 // Configuraciones de express
 app.set('port', process.env.PORT || 3000);
 
@@ -14,8 +15,10 @@ app.set('port', process.env.PORT || 3000);
 app.use(morgan('dev'));
 app.use(express.json());
 
+
 //Rutas
 app.use('/tareas',require('./routes/tareas'));
+
 
 //Ficheros estáticos
 app.use(express.static(__dirname + '/public'))
