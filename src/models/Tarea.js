@@ -8,6 +8,4 @@ const Tarea = new Schema({
     descripcion: String
     });
 
-
-
 module.exports = mongoose.model('Tarea', Tarea);
