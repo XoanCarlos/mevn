@@ -1,0 +1,73 @@
+<template xmlns="http://www.w3.org/1999/html">
+  <div>
+  <nav class="navbar navbar-light bg-light">
+    <a href="/" class="navbar-brand">Inicio</a>
+  </nav>
+    <div class="container">
+      <div class="row pt-5">
+        <div class="col-mod-5">
+          <div class="card">
+            <div class="card-body">
+              <form @submit.prevent="altaTarea">
+                <div class="form-group">
+                  <input type="text" v-model="tarea.titulo" placeholder="Nueva Tarea"
+                  class="form-control">
+                </div>
+                <br>
+                <div class="form-group">
+                  <textarea v-model="tarea.descripcion" cols="30" rows="10"
+                         class="form-control" placeholder="Descripción Tarea"></textarea>
+                </div>
+                <br>
+                <div class="d-grid gap-2">
+                <button class="btn btn-primary d-md-block">Guardar</button>
+                </div>
+              </form>
+            </div>
+           </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!--zona de scripts-->
+<script>
+//creamos un clase Tarea
+  class Tarea{
+    constructor(titulo, descripcion) {
+      this.titulo = titulo;
+      this.descripcion = descripcion;
+    }
+  }
+  export  default {
+    data(){
+      return{
+        tarea: new Tarea()    //instacionamos una tarea cada vez que lo necesitemos
+        }
+      },
+    created() {
+      this.listTareas();   //se carga al iniciar la aplicación
+    },
+    methods: {
+      listTareas() {
+        fetch('api/tareas')
+            .then(res => res.json())   //formato respuesta
+            .then(data => console.log(data));
+      },
+      altaTarea() {   //método que conecta con submit
+        fetch('/api/tareas',{
+          method: 'POST',
+          body: JSON.stringify(this.tarea),
+          headers: {
+            'Accept':'application/json',
+            'Content-type': 'application/json'
+          }
+        })
+            .then(res => res.json())
+            .then(data => console.log(data))  //para ver los datos
+        this.tarea = new Tarea();  //refresca el formulario
+      }
+    }
+  }
+</script>
