@@ -17,7 +17,7 @@ app.use(express.json());
 
 
 //Rutas
-app.use('/tareas',require('./routes/tareas'));
+app.use('/api/tareas',require('./routes/tareas'));
 
 
 //Ficheros estáticos
