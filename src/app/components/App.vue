@@ -4,6 +4,26 @@
     <a href="/" class="navbar-brand">Inicio</a>
   </nav>
     <div class="container">
+      <div class="col-md-5">
+      </div>
+      <div class="col-md-7">
+        <table class="table table-bordered">
+          <thead>
+           <tr>
+             <th>Tarea</th>
+             <th>Descripción</th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr v-for="tarea of tareas" >
+             <td>{{ tarea.titulo }}</td>
+             <td>{{ tarea.descripcion }}</td>
+           </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="container">
       <div class="row pt-5">
         <div class="col-mod-5">
           <div class="card">
@@ -43,8 +63,9 @@
   export  default {
     data(){
       return{
-        tarea: new Tarea()    //instacionamos una tarea cada vez que lo necesitemos
-        }
+        tarea: new Tarea(),//instacionamos una tarea cada vez que lo necesitemos
+        tareas: []  //almacena las tareas al recargar
+      }
       },
     created() {
       this.listTareas();   //se carga al iniciar la aplicación
@@ -53,7 +74,10 @@
       listTareas() {
         fetch('api/tareas')
             .then(res => res.json())   //formato respuesta
-            .then(data => console.log(data));
+            .then(data => {
+              this.tareas = data;
+              console.log(this.tareas)
+            });
       },
       altaTarea() {   //método que conecta con submit
         fetch('/api/tareas',{
