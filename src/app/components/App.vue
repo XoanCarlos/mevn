@@ -18,6 +18,9 @@
            <tr v-for="tarea of tareas" >
              <td>{{ tarea.titulo }}</td>
              <td>{{ tarea.descripcion }}</td>
+             <td>
+               <button @click="bajaTarea(tarea._id)" class="btn btn-danger">Eliminar</button>
+             </td>
            </tr>
           </tbody>
         </table>
@@ -77,6 +80,19 @@
             .then(data => {
               this.tareas = data;
               console.log(this.tareas)
+            });
+      },
+      bajaTarea(id){
+        fetch('/api/tareas/' + id, {
+          method: 'DELETE',
+          headers: {
+            'Accept': 'application/json',
+            'Content-type': 'application/json'
+          }
+        })
+            .then(res => res.json())
+            .then(data => {
+              this.listTareas();
             });
       },
       altaTarea() {   //método que conecta con submit
