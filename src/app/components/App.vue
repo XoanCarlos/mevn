@@ -19,7 +19,8 @@
              <td>{{ tarea.titulo }}</td>
              <td>{{ tarea.descripcion }}</td>
              <td>
-               <button @click="bajaTarea(tarea._id)" class="btn btn-danger">Eliminar</button>
+               <button @click="bajaTarea(tarea._id)" class="btn btn-danger">Eliminar</button>&nbsp;
+               <button @click="editaTarea(tarea._id)" class="btn btn-secondary">Editar</button>
              </td>
            </tr>
           </tbody>
@@ -42,9 +43,12 @@
                          class="form-control" placeholder="Descripción Tarea"></textarea>
                 </div>
                 <br>
-                <div class="d-grid gap-2">
-                <button class="btn btn-primary d-md-block">Guardar</button>
-                </div>
+                <template v-if="editar === false">
+                  <button class="btn btn-primary btn-block">Guardar</button>
+                </template>
+                <template v-else>
+                  <button class="btn btn-primary btn-warning">Actualizar</button>
+                </template>
               </form>
             </div>
            </div>
@@ -61,13 +65,15 @@
     constructor(titulo, descripcion) {
       this.titulo = titulo;
       this.descripcion = descripcion;
+        }
     }
-  }
   export  default {
     data(){
       return{
         tarea: new Tarea(),//instacionamos una tarea cada vez que lo necesitemos
-        tareas: []  //almacena las tareas al recargar
+        tareas: [], //almacena las tareas al recargar
+        editar: false,  //variable que cambia la vista de formulario a editar
+        tareaEditarid: '' //almacena el id del registro a editar
       }
       },
     created() {
@@ -82,7 +88,7 @@
               console.log(this.tareas)
             });
       },
-      bajaTarea(id){
+      bajaTarea(id) {
         fetch('/api/tareas/' + id, {
           method: 'DELETE',
           headers: {
@@ -95,19 +101,46 @@
               this.listTareas();
             });
       },
-      altaTarea() {   //método que conecta con submit
-        fetch('/api/tareas',{
-          method: 'POST',
-          body: JSON.stringify(this.tarea),
-          headers: {
-            'Accept':'application/json',
-            'Content-type': 'application/json'
-          }
-        })
+      editaTarea(id) {
+        fetch('/api/tareas/' + id)
             .then(res => res.json())
-            .then(data => console.log(data))  //para ver los datos
-        this.tarea = new Tarea();  //refresca el formulario
+            .then(data => {
+              this.tarea = new Tarea(data.titulo, data.descripcion);
+              this.editar = true;
+              this.tareaEditarid = data._id;
+            });
+      },
+      altaTarea() {//método que conecta con submit
+        if (this.editar === false) {
+          fetch('/api/tareas', {
+            method: 'POST',
+            body: JSON.stringify(this.tarea),
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json'
+            }
+          })
+              .then(res => res.json())
+              .then(data => {  //para ver los datos
+                this.listTareas();  //refresca el formulario
+              })
+        } else {
+          fetch('/api/tareas/' + this.tareaEditarid, {
+            method: 'PUT',
+            body: JSON.stringify(this.tarea),  //los datos de la tarea a Editar
+            headers: {
+              'Accept': 'application/json',
+              'Content-type': 'application/json'
+            }
+          })
+              .then(res => res.json())
+              .then(data => {
+                this.listTareas(); //refresca el listado
+                this.editar = false; // para volver al estado inicial
+              });
+        }
+        this.tarea = new Tarea();
+        }
       }
     }
-  }
 </script>

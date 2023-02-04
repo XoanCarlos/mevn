@@ -26,9 +26,14 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     await  Tarea.findByIdAndRemove(req.params.id);
-
     res.json({
         status: 'Tarea Eliminada'
     });
 });
+
+router.get("/:id", async (req, res)=>{
+    const tarea = await Tarea.findById(req.params.id);
+    res.json(tarea);
+});
+
 module.exports = router;
