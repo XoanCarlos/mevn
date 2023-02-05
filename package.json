@@ -6,7 +6,8 @@
     "dev": "nodemon src/index.js",
     "build": "vite build",
     "preview": "vite preview",
-    "webpack": "webpack --mode development --watch"
+    "webpack": "webpack --mode development --watch",
+    "build": "webpack --mode production"
   },
   "dependencies": {
     "daemon": "^1.1.0",

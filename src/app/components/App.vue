@@ -47,7 +47,8 @@
                   <button class="btn btn-primary btn-block">Guardar</button>
                 </template>
                 <template v-else>
-                  <button class="btn btn-primary btn-warning">Actualizar</button>
+                  <button class="btn btn-primary btn-success">Actualizar</button>&nbsp;
+                  <button @click="listTareas()" class="btn btn-primary btn-warning">Cancelar</button>
                 </template>
               </form>
             </div>
